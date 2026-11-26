@@ -1,381 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WA Contact Manager</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8;color:#222}
-header{background:#075e54;color:white;padding:20px}
-header h1{margin:0;font-size:23px}
-header p{margin:6px 0 0;font-size:14px}
-.container{max-width:1100px;margin:auto;padding:15px}
-.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.card{background:white;padding:18px;border-radius:12px;box-shadow:0 2px 6px #0001}
-.card strong{font-size:26px;display:block;margin-top:8px}
-nav{display:flex;flex-wrap:wrap;gap:8px;margin:15px 0}
-button{border:0;padding:11px 15px;border-radius:8px;cursor:pointer;font-weight:bold}
-nav button{background:#e0e8e6;color:#075e54}
-nav button.active{background:#075e54;color:white}
-.primary{background:#087f5b;color:white}
-.secondary{background:#e8eeee;color:#222}
-.danger{background:#ffe3e3;color:#a00}
-.panel{background:white;border-radius:12px;padding:18px;margin-bottom:15px}
-input,select,textarea{padding:11px;border:1px solid #ddd;border-radius:8px;width:100%;margin:5px 0;font:inherit}
-textarea{min-height:110px}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-table{width:100%;border-collapse:collapse}
-th,td{padding:10px;border-bottom:1px solid #eee;text-align:left}
-.tablewrap{overflow:auto}
-.small{font-size:12px;color:#666}
-.tag{padding:5px 9px;border-radius:15px;background:#e5f6ed;color:#087f5b;font-size:12px}
-.hidden{display:none}
-.actions{display:flex;gap:5px;flex-wrap:wrap}
-@media(max-width:700px){
-.cards{grid-template-columns:repeat(2,1fr)}
-.grid{grid-template-columns:1fr}
-th,td{padding:7px;font-size:13px}
-}
-</style>
-</head>
-<body>
-
-<header>
-<h1>WA Contact Manager</h1>
-<p>WhatsApp Contacts & Campaign Tracker</p>
-</header>
-
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>WA Contact Manager</title>
+<style>*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8;color:#222}header{background:#075e54;color:white;padding:20px}header h1{margin:0;font-size:23px}header p{margin:6px 0 0;font-size:14px}.container{max-width:1100px;margin:auto;padding:15px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card{background:white;padding:18px;border-radius:12px;box-shadow:0 2px 6px #0001}.card strong{font-size:26px;display:block;margin-top:8px}nav{display:flex;flex-wrap:wrap;gap:8px;margin:15px 0}button{border:0;padding:11px 15px;border-radius:8px;cursor:pointer;font-weight:bold}nav button{background:#e0e8e6;color:#075e54}nav button.active{background:#075e54;color:white}.primary{background:#087f5b;color:white}.secondary{background:#e8eeee;color:#222}.danger{background:#ffe3e3;color:#a00}.panel{background:white;border-radius:12px;padding:18px;margin-bottom:15px}input,select,textarea{padding:11px;border:1px solid #ddd;border-radius:8px;width:100%;margin:5px 0;font:inherit}textarea{min-height:110px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #eee;text-align:left}.tablewrap{overflow:auto}.small{font-size:12px;color:#666}.tag{padding:5px 9px;border-radius:15px;background:#e5f6ed;color:#087f5b;font-size:12px}.hidden{display:none}.actions{display:flex;gap:5px;flex-wrap:wrap}.login{max-width:480px;margin:40px auto}.status{padding:10px;border-radius:8px;background:#eef6f3;margin:10px 0}@media(max-width:700px){.cards{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}th,td{padding:7px;font-size:13px}}</style></head>
+<body><header><h1>WA Contact Manager</h1><p>WhatsApp Contacts & Campaign Tracker</p></header>
 <div class="container">
-
-<div class="cards">
-<div class="card">Total Contacts<strong id="total">0</strong></div>
-<div class="card">Sent<strong id="sent">0</strong></div>
-<div class="card">Pending<strong id="pending">0</strong></div>
-<div class="card">Campaigns<strong id="campaignCount">0</strong></div>
-</div>
-
-<nav>
-<button class="active" onclick="showPage('dashboard',this)">Dashboard</button>
-<button onclick="showPage('contacts',this)">Contacts</button>
-<button onclick="showPage('campaign',this)">Campaign</button>
-<button onclick="showPage('history',this)">Sent History</button>
-</nav>
-
-<section id="dashboard">
-<div class="panel">
-<h2>Dashboard</h2>
-<p>Welcome to WA Contact Manager.</p>
-<p>Manage contacts, create campaigns and record WhatsApp messages sent.</p>
-<button class="primary" onclick="openCampaign()">Create Campaign</button>
-</div>
-</section>
-
-<section id="contacts" class="hidden">
-<div class="panel">
-<h2>Add Contact</h2>
-<div class="grid">
-<input id="name" placeholder="Contact Name">
-<input id="phone" placeholder="WhatsApp Number (with country code)">
-<input id="shop" placeholder="Shop Name">
-<input id="district" placeholder="District">
-<input id="category" placeholder="Group / Category">
-<input id="notes" placeholder="Notes">
-</div>
-<button class="primary" onclick="addContact()">Save Contact</button>
-</div>
-
-<div class="panel">
-<h2>Import Contacts CSV</h2>
-<p class="small">CSV columns: name,phone,shop,district,category,notes</p>
-<input type="file" id="csvfile" accept=".csv">
-<button class="primary" onclick="importCSV()">Import CSV</button>
-<button class="secondary" onclick="exportCSV()">Export CSV</button>
-</div>
-
-<div class="panel">
-<h2>Contact List</h2>
-<input id="search" placeholder="Search name, number, shop or district" oninput="renderContacts()">
-<div class="actions">
-<button class="secondary" onclick="selectAll()">Select All</button>
-<button class="secondary" onclick="clearSelection()">Clear Selection</button>
-<button class="primary" onclick="openCampaign()">Create Campaign from Selected</button>
-</div>
-<div class="tablewrap">
-<table>
-<thead>
-<tr><th></th><th>Name</th><th>WhatsApp</th><th>Shop</th><th>District</th><th>Actions</th></tr>
-</thead>
-<tbody id="contactRows"></tbody>
-</table>
-</div>
-</div>
-</section>
-
-<section id="campaign" class="hidden">
-<div class="panel">
-<h2>Create Campaign</h2>
-<input id="campaignName" placeholder="Campaign Name">
-<textarea id="message" placeholder="Type your WhatsApp message here..."></textarea>
-<button class="primary" onclick="createCampaign()">Create Campaign</button>
-</div>
-
-<div class="panel">
-<h2>Campaign Sending</h2>
-<p id="campaignInfo">Create a campaign to begin.</p>
-<div class="actions">
-<button class="primary" onclick="sendNext()">Send Next WhatsApp</button>
-<button class="secondary" onclick="markSent()">Mark Current as Sent</button>
-<button class="secondary" onclick="skipCurrent()">Skip Current</button>
-</div>
-<p id="currentInfo"></p>
-</div>
-</section>
-
-<section id="history" class="hidden">
-<div class="panel">
-<h2>Sent History</h2>
-<button class="secondary" onclick="exportHistory()">Export History CSV</button>
-<div class="tablewrap">
-<table>
-<thead><tr><th>Name</th><th>Number</th><th>Campaign</th><th>Status</th><th>Date</th></tr></thead>
-<tbody id="historyRows"></tbody>
-</table>
-</div>
-</div>
-</section>
-
-</div>
-
-<script>
-let contacts=JSON.parse(localStorage.getItem('wa_contacts')||'[]');
-let campaigns=JSON.parse(localStorage.getItem('wa_campaigns')||'[]');
-let history=JSON.parse(localStorage.getItem('wa_history')||'[]');
-let selected=new Set();
-let currentCampaign=null;
-let currentIndex=-1;
-
-function save(){
-localStorage.setItem('wa_contacts',JSON.stringify(contacts));
-localStorage.setItem('wa_campaigns',JSON.stringify(campaigns));
-localStorage.setItem('wa_history',JSON.stringify(history));
-updateDashboard();
-}
-
-function showPage(id,btn){
-document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'));
-document.getElementById(id).classList.remove('hidden');
-document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
-if(btn)btn.classList.add('active');
-renderContacts();
-renderHistory();
-}
-
-function updateDashboard(){
-document.getElementById('total').textContent=contacts.length;
-document.getElementById('sent').textContent=history.filter(x=>x.status==='sent').length;
-document.getElementById('pending').textContent=contacts.length-history.filter(x=>x.status==='sent').length;
-document.getElementById('campaignCount').textContent=campaigns.length;
-}
-
-function addContact(){
-let n=document.getElementById('name').value.trim();
-let p=document.getElementById('phone').value.trim().replace(/\s+/g,'');
-if(!n||!p){alert('Name and WhatsApp number required');return;}
-if(contacts.some(c=>c.phone===p)){alert('This number already exists');return;}
-contacts.push({
-id:Date.now(),
-name:n,
-phone:p,
-shop:document.getElementById('shop').value,
-district:document.getElementById('district').value,
-category:document.getElementById('category').value,
-notes:document.getElementById('notes').value
-});
-['name','phone','shop','district','category','notes'].forEach(x=>document.getElementById(x).value='');
-save();renderContacts();
-}
-
-function renderContacts(){
-let q=(document.getElementById('search')?.value||'').toLowerCase();
-let rows=contacts.filter(c=>
-[c.name,c.phone,c.shop,c.district,c.category].join(' ').toLowerCase().includes(q)
-);
-document.getElementById('contactRows').innerHTML=rows.map(c=>`
-<tr>
-<td><input type="checkbox" ${selected.has(c.id)?'checked':''} onchange="toggle(${c.id},this.checked)"></td>
-<td>${esc(c.name)}</td>
-<td>${esc(c.phone)}</td>
-<td>${esc(c.shop||'')}</td>
-<td>${esc(c.district||'')}</td>
-<td><button class="danger" onclick="deleteContact(${c.id})">Delete</button></td>
-</tr>`).join('');
-}
-
-function toggle(id,on){on?selected.add(id):selected.delete(id)}
-
-function selectAll(){
-contacts.forEach(c=>selected.add(c.id));
-renderContacts();
-}
-
-function clearSelection(){selected.clear();renderContacts()}
-
-function deleteContact(id){
-if(!confirm('Delete this contact?'))return;
-contacts=contacts.filter(c=>c.id!==id);
-selected.delete(id);
-save();renderContacts();
-}
-
-function openCampaign(){
-if(!selected.size){alert('Select contacts first');return;}
-showPage('campaign',document.querySelectorAll('nav button')[2]);
-document.getElementById('campaignInfo').textContent=selected.size+' contacts selected.';
-}
-
-function createCampaign(){
-let name=document.getElementById('campaignName').value.trim();
-let msg=document.getElementById('message').value.trim();
-if(!name||!msg){alert('Enter campaign name and message');return;}
-if(!selected.size){alert('Select contacts from Contact List first');return;}
-let list=contacts.filter(c=>selected.has(c.id));
-currentCampaign={
-id:Date.now(),
-name:name,
-message:msg,
-contacts:list.map(c=>c.id),
-index:0
-};
-campaigns.push({id:currentCampaign.id,name:name,message:msg,created:new Date().toISOString(),count:list.length});
-currentIndex=-1;
-document.getElementById('campaignInfo').textContent=name+' | '+list.length+' contacts';
-document.getElementById('currentInfo').textContent='Campaign ready. Click Send Next WhatsApp.';
-save();
-}
-
-function sendNext(){
-if(!currentCampaign){alert('Create a campaign first');return;}
-let list=currentCampaign.contacts;
-if(currentIndex>=0){
-let id=list[currentIndex];
-let c=contacts.find(x=>x.id===id);
-if(c&&!history.some(h=>h.campaignId===currentCampaign.id&&h.contactId===id)){
-history.push({
-campaignId:currentCampaign.id,
-campaign:currentCampaign.name,
-contactId:id,
-name:c.name,
-phone:c.phone,
-status:'pending',
-message:currentCampaign.message
-});
-}
-}
-let i=list.findIndex((id,index)=>index>currentIndex&&
-!history.some(h=>h.campaignId===currentCampaign.id&&h.contactId===id));
-if(i<0){alert('Campaign contacts completed');return;}
-currentIndex=i;
-let c=contacts.find(x=>x.id===list[i]);
-document.getElementById('currentInfo').textContent='Current: '+c.name+' | '+c.phone;
-let phone=c.phone.replace(/[^\d]/g,'');
-let url='https://wa.me/'+phone+'?text='+encodeURIComponent(currentCampaign.message);
-window.open(url,'_blank');
-}
-
-function markSent(){
-if(!currentCampaign||currentIndex<0){alert('Open a contact first');return;}
-let id=currentCampaign.contacts[currentIndex];
-let c=contacts.find(x=>x.id===id);
-let h=history.find(x=>x.campaignId===currentCampaign.id&&x.contactId===id);
-if(h){h.status='sent';h.date=new Date().toISOString();}
-else history.push({
-campaignId:currentCampaign.id,
-campaign:currentCampaign.name,
-contactId:id,
-name:c.name,
-phone:c.phone,
-status:'sent',
-date:new Date().toISOString(),
-message:currentCampaign.message
-});
-save();renderHistory();
-alert('Marked as Sent. Click Send Next WhatsApp.');
-}
-
-function skipCurrent(){
-if(!currentCampaign||currentIndex<0){alert('Open a contact first');return;}
-let id=currentCampaign.contacts[currentIndex];
-let c=contacts.find(x=>x.id===id);
-history.push({
-campaignId:currentCampaign.id,
-campaign:currentCampaign.name,
-contactId:id,
-name:c.name,
-phone:c.phone,
-status:'skipped',
-date:new Date().toISOString(),
-message:currentCampaign.message
-});
-save();
-sendNext();
-}
-
-function renderHistory(){
-document.getElementById('historyRows').innerHTML=history.slice().reverse().map(h=>`
-<tr>
-<td>${esc(h.name)}</td>
-<td>${esc(h.phone)}</td>
-<td>${esc(h.campaign||'')}</td>
-<td><span class="tag">${esc(h.status)}</span></td>
-<td>${h.date?new Date(h.date).toLocaleString():'-'}</td>
-</tr>`).join('');
-}
-
-function importCSV(){
-let file=document.getElementById('csvfile').files[0];
-if(!file){alert('Choose CSV file');return;}
-let reader=new FileReader();
-reader.onload=function(){
-let lines=reader.result.split(/\r?\n/);
-let added=0;
-for(let i=1;i<lines.length;i++){
-if(!lines[i].trim())continue;
-let a=lines[i].split(',');
-let n=(a[0]||'').trim().replace(/^"|"$/g,'');
-let p=(a[1]||'').trim().replace(/^"|"$/g,'').replace(/\s/g,'');
-if(!n||!p||contacts.some(c=>c.phone===p))continue;
-contacts.push({id:Date.now()+i,name:n,phone:p,shop:a[2]||'',district:a[3]||'',category:a[4]||'',notes:a[5]||''});
-added++;
-}
-save();renderContacts();
-alert(added+' contacts imported.');
-};
-reader.readAsText(file);
-}
-
-function exportCSV(){
-downloadCSV('contacts.csv',['name,phone,shop,district,category,notes',...contacts.map(c=>[c.name,c.phone,c.shop,c.district,c.category,c.notes].map(csvEscape).join(','))]);
-}
-
-function exportHistory(){
-downloadCSV('sent-history.csv',['name,phone,campaign,status,date',...history.map(h=>[h.name,h.phone,h.campaign,h.status,h.date||''].map(csvEscape).join(','))]);
-}
-
-function downloadCSV(name,lines){
-let blob=new Blob([lines.join('\n')],{type:'text/csv'});
-let a=document.createElement('a');
-a.href=URL.createObjectURL(blob);
-a.download=name;a.click();
-URL.revokeObjectURL(a.href);
-}
-
-function csvEscape(v){return '"'+String(v||'').replace(/"/g,'""')+'"';}
-function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
-
-updateDashboard();
-renderContacts();
-renderHistory();
-</script>
-</body>
-</html>
+<section id="authPanel" class="panel login"><h2>Login / Create Account</h2><p class="small">Sign in to sync your contacts and campaigns securely.</p><input id="email" type="email" placeholder="Email"><input id="password" type="password" placeholder="Password"><div class="actions"><button class="primary" onclick="signIn()">Login</button><button class="secondary" onclick="signUp()">Create Account</button></div><p id="authMsg" class="small"></p></section>
+<div id="app" class="hidden">
+<div class="panel actions" style="justify-content:space-between;align-items:center"><span id="userLabel" class="small"></span><button class="secondary" onclick="signOut()">Sign Out</button></div>
+<div class="cards"><div class="card">Total Contacts<strong id="total">0</strong></div><div class="card">Sent<strong id="sent">0</strong></div><div class="card">Pending<strong id="pending">0</strong></div><div class="card">Campaigns<strong id="campaignCount">0</strong></div></div>
+<nav><button class="active" onclick="showPage('dashboard',this)">Dashboard</button><button onclick="showPage('contacts',this)">Contacts</button><button onclick="showPage('campaign',this)">Campaign</button><button onclick="showPage('history',this)">Sent History</button></nav>
+<section id="dashboard"><div class="panel"><h2>Dashboard</h2><p>Welcome to WA Contact Manager.</p><p>Manage contacts, create campaigns and record WhatsApp messages sent.</p><button class="primary" onclick="openCampaign()">Create Campaign</button></div></section>
+<section id="contacts" class="hidden"><div class="panel"><h2>Add Contact</h2><div class="grid"><input id="name" placeholder="Contact Name"><input id="phone" placeholder="WhatsApp Number (with country code)"><input id="shop" placeholder="Shop Name"><input id="district" placeholder="District"><input id="category" placeholder="Group / Category"><input id="notes" placeholder="Notes"></div><button class="primary" onclick="addContact()">Save Contact</button></div>
+<div class="panel"><h2>Bulk Paste Contacts</h2><p class="small">Paste names and numbers copied from groups or lists. Numbers alone are also accepted. One contact per line is recommended.</p><textarea id="bulkText" placeholder="Rahman 9876543210&#10;9876543211&#10;Ameen, +91 98765 43212"></textarea><button class="primary" onclick="previewBulk()">Check Numbers</button><p id="bulkPreview" class="small"></p><button class="primary hidden" id="bulkImportBtn" onclick="importBulk()">Import All</button></div><div class="panel"><h2>Import Contacts CSV</h2><p class="small">CSV columns: name,phone,shop,district,category,notes</p><input type="file" id="csvfile" accept=".csv"><button class="primary" onclick="importCSV()">Import CSV</button><button class="secondary" onclick="exportCSV()">Export CSV</button></div>
+<div class="panel"><h2>Contact List</h2><input id="search" placeholder="Search name, number, shop or district" oninput="renderContacts()"><div class="actions"><button class="secondary" onclick="selectAll()">Select All</button><button class="secondary" onclick="clearSelection()">Clear Selection</button><button class="primary" onclick="openCampaign()">Create Campaign from Selected</button></div><div class="tablewrap"><table><thead><tr><th></th><th>Name</th><th>WhatsApp</th><th>Shop</th><th>District</th><th>Actions</th></tr></thead><tbody id="contactRows"></tbody></table></div></div></section>
+<section id="campaign" class="hidden"><div class="panel"><h2>Create Campaign</h2><input id="campaignName" placeholder="Campaign Name"><textarea id="message" placeholder="Type your WhatsApp message here..."></textarea><button class="primary" onclick="createCampaign()">Create Campaign</button></div><div class="panel"><h2>Campaign Sending</h2><p id="campaignInfo">Create a campaign to begin.</p><div class="actions"><button class="primary" onclick="sendNext()">Send Next WhatsApp</button><button class="secondary" onclick="markSent()">Mark Current as Sent</button><button class="secondary" onclick="skipCurrent()">Skip Current</button></div><p id="currentInfo"></p></div></section>
+<section id="history" class="hidden"><div class="panel"><h2>Sent History</h2><button class="secondary" onclick="exportHistory()">Export History CSV</button><div class="tablewrap"><table><thead><tr><th>Name</th><th>Number</th><th>Campaign</th><th>Status</th><th>Date</th></tr></thead><tbody id="historyRows"></tbody></table></div></div></section></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+const SUPABASE_URL='https://sbogitukzkezbvauvaho.supabase.co';
+const SUPABASE_KEY='sb_publishable_MReVK-v_9ngvOLj14Xv3Hw_01-gp3CB';
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let contacts=[],campaigns=[],history=[],selected=new Set(),currentCampaign=null,currentIndex=-1,user=null;
+async function init(){const {data:{session}}=await sb.auth.getSession();if(session){user=session.user;await enterApp()}else showAuth();sb.auth.onAuthStateChange((_event,session)=>{if(session&&!user){user=session.user;setTimeout(enterApp,0)}else if(!session){user=null;showAuth()}})}
+function showAuth(){document.getElementById('authPanel').classList.remove('hidden');document.getElementById('app').classList.add('hidden')}
+async function signIn(){let email=document.getElementById('email').value.trim(),password=document.getElementById('password').value;authMessage('Signing in...');let {error}=await sb.auth.signInWithPassword({email,password});authMessage(error?error.message:'Login successful.')}
+async function signUp(){let email=document.getElementById('email').value.trim(),password=document.getElementById('password').value;if(password.length<6){authMessage('Password must be at least 6 characters.');return}authMessage('Creating account...');let {error}=await sb.auth.signUp({email,password});authMessage(error?error.message:'Account created. If email confirmation is enabled, confirm your email and then log in.')}
+function authMessage(m){document.getElementById('authMsg').textContent=m}
+async function signOut(){await sb.auth.signOut();user=null;contacts=[];campaigns=[];history=[];selected.clear();currentCampaign=null;showAuth()}
+async function enterApp(){if(!user)return;document.getElementById('authPanel').classList.add('hidden');document.getElementById('app').classList.remove('hidden');document.getElementById('userLabel').textContent='Logged in: '+user.email;try{await loadData();updateDashboard();renderContacts();renderHistory()}catch(e){alert('Could not load Supabase data: '+e.message)}}
+async function loadData(){const [c,ca,m]=await Promise.all([sb.from('contacts').select('*').order('created_at',{ascending:false}),sb.from('campaigns').select('*').order('created_at',{ascending:false}),sb.from('campaign_messages').select('*').order('created_at',{ascending:false})]);if(c.error)throw c.error;if(ca.error)throw ca.error;if(m.error)throw m.error;contacts=(c.data||[]).map(x=>({id:x.id,name:x.name,phone:x.phone,shop:x.shop_name||'',district:x.district||'',category:x.category||'',notes:x.notes||''}));campaigns=ca.data||[];history=(m.data||[]).map(x=>{let camp=campaigns.find(z=>z.id===x.campaign_id);let cont=contacts.find(z=>z.id===x.contact_id);return {id:x.id,campaignId:x.campaign_id,contactId:x.contact_id,campaign:camp?.campaign_name||'',name:cont?.name||'',phone:cont?.phone||'',status:x.status,message:x.message_text||'',date:x.sent_at||x.created_at}})}
+async function showPage(id,btn){document.querySelectorAll('#app section').forEach(s=>s.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');renderContacts();renderHistory()}
+function updateDashboard(){document.getElementById('total').textContent=contacts.length;document.getElementById('sent').textContent=history.filter(x=>x.status==='sent').length;document.getElementById('pending').textContent=contacts.length-history.filter(x=>x.status==='sent').length;document.getElementById('campaignCount').textContent=campaigns.length}
+async function addContact(){let n=document.getElementById('name').value.trim(),p=normalizePhone(document.getElementById('phone').value);if(!p){alert('WhatsApp number required');return}if(!n)n=p;if(contacts.some(c=>normalizePhone(c.phone)===p)){alert('This number already exists');return}let payload={owner_id:user.id,name:n,phone:p,shop_name:document.getElementById('shop').value.trim(),district:document.getElementById('district').value.trim(),category:document.getElementById('category').value.trim(),notes:document.getElementById('notes').value.trim()};let {data,error}=await sb.from('contacts').insert(payload).select().single();if(error){alert(error.message);return}contacts.unshift({id:data.id,name:data.name,phone:data.phone,shop:data.shop_name||'',district:data.district||'',category:data.category||'',notes:data.notes||''});['name','phone','shop','district','category','notes'].forEach(x=>document.getElementById(x).value='');updateDashboard();renderContacts()}
+function renderContacts(){let q=(document.getElementById('search')?.value||'').toLowerCase();let rows=contacts.filter(c=>[c.name,c.phone,c.shop,c.district,c.category].join(' ').toLowerCase().includes(q));let el=document.getElementById('contactRows');if(!el)return;el.innerHTML=rows.map(c=>`<tr><td><input type="checkbox" ${selected.has(c.id)?'checked':''} onchange="toggle('${c.id}',this.checked)"></td><td>${esc(c.name)}</td><td>${esc(c.phone)}</td><td>${esc(c.shop||'')}</td><td>${esc(c.district||'')}</td><td><button class="danger" onclick="deleteContact('${c.id}')">Delete</button></td></tr>`).join('')}
+function toggle(id,on){on?selected.add(id):selected.delete(id)}function selectAll(){contacts.forEach(c=>selected.add(c.id));renderContacts()}function clearSelection(){selected.clear();renderContacts()}
+async function deleteContact(id){if(!confirm('Delete this contact?'))return;let {error}=await sb.from('contacts').delete().eq('id',id);if(error){alert(error.message);return}contacts=contacts.filter(c=>c.id!==id);selected.delete(id);history=history.filter(h=>h.contactId!==id);updateDashboard();renderContacts();renderHistory()}
+function openCampaign(){if(!selected.size){alert('Select contacts first');return}showPage('campaign',document.querySelectorAll('nav button')[2]);document.getElementById('campaignInfo').textContent=selected.size+' contacts selected.'}
+async function createCampaign(){let name=document.getElementById('campaignName').value.trim(),msg=document.getElementById('message').value.trim();if(!name||!msg){alert('Enter campaign name and message');return}if(!selected.size){alert('Select contacts from Contact List first');return}let list=contacts.filter(c=>selected.has(c.id));let {data,error}=await sb.from('campaigns').insert({owner_id:user.id,campaign_name:name,message:msg}).select().single();if(error){alert(error.message);return}currentCampaign={id:data.id,name,message:msg,contacts:list.map(c=>c.id),index:0};campaigns.unshift(data);currentIndex=-1;document.getElementById('campaignInfo').textContent=name+' | '+list.length+' contacts';document.getElementById('currentInfo').textContent='Campaign ready. Click Send Next WhatsApp.';updateDashboard()}
+async function sendNext(){if(!currentCampaign){alert('Create a campaign first');return}let list=currentCampaign.contacts;if(currentIndex>=0){let id=list[currentIndex],c=contacts.find(x=>x.id===id);if(c&&!history.some(h=>h.campaignId===currentCampaign.id&&h.contactId===id)){let {data,error}=await sb.from('campaign_messages').insert({owner_id:user.id,campaign_id:currentCampaign.id,contact_id:id,status:'pending',message_text:currentCampaign.message}).select().single();if(error&&error.code!=='23505'){alert(error.message);return}if(data)history.push({id:data.id,campaignId:currentCampaign.id,contactId:id,campaign:currentCampaign.name,name:c.name,phone:c.phone,status:'pending',message:currentCampaign.message,date:data.created_at})}}
+let i=list.findIndex((id,index)=>index>currentIndex&&!history.some(h=>h.campaignId===currentCampaign.id&&h.contactId===id));if(i<0){alert('Campaign contacts completed');return}currentIndex=i;let c=contacts.find(x=>x.id===list[i]);document.getElementById('currentInfo').textContent='Current: '+c.name+' | '+c.phone;let phone=c.phone.replace(/[^\d]/g,'');window.open('https://wa.me/'+phone+'?text='+encodeURIComponent(currentCampaign.message),'_blank')}
+async function markSent(){if(!currentCampaign||currentIndex<0){alert('Open a contact first');return}let id=currentCampaign.contacts[currentIndex],c=contacts.find(x=>x.id===id),h=history.find(x=>x.campaignId===currentCampaign.id&&x.contactId===id);if(h){let {data,error}=await sb.from('campaign_messages').update({status:'sent',sent_at:new Date().toISOString()}).eq('id',h.id).select().single();if(error){alert(error.message);return}h.status='sent';h.date=data.sent_at}else{let {data,error}=await sb.from('campaign_messages').insert({owner_id:user.id,campaign_id:currentCampaign.id,contact_id:id,status:'sent',sent_at:new Date().toISOString(),message_text:currentCampaign.message}).select().single();if(error){alert(error.message);return}history.push({id:data.id,campaignId:currentCampaign.id,contactId:id,campaign:currentCampaign.name,name:c.name,phone:c.phone,status:'sent',message:currentCampaign.message,date:data.sent_at})}updateDashboard();renderHistory();alert('Marked as Sent. Click Send Next WhatsApp.')}
+async function skipCurrent(){if(!currentCampaign||currentIndex<0){alert('Open a contact first');return}let id=currentCampaign.contacts[currentIndex],c=contacts.find(x=>x.id===id);let existing=history.find(x=>x.campaignId===currentCampaign.id&&x.contactId===id);if(existing){let {error}=await sb.from('campaign_messages').update({status:'skipped'}).eq('id',existing.id);if(error){alert(error.message);return}existing.status='skipped'}else{let {data,error}=await sb.from('campaign_messages').insert({owner_id:user.id,campaign_id:currentCampaign.id,contact_id:id,status:'skipped',message_text:currentCampaign.message}).select().single();if(error){alert(error.message);return}history.push({id:data.id,campaignId:currentCampaign.id,contactId:id,campaign:currentCampaign.name,name:c.name,phone:c.phone,status:'skipped',message:currentCampaign.message,date:data.created_at})}updateDashboard();renderHistory();sendNext()}
+function renderHistory(){let el=document.getElementById('historyRows');if(!el)return;el.innerHTML=history.slice().reverse().map(h=>`<tr><td>${esc(h.name)}</td><td>${esc(h.phone)}</td><td>${esc(h.campaign||'')}</td><td><span class="tag">${esc(h.status)}</span></td><td>${h.date?new Date(h.date).toLocaleString():'-'}</td></tr>`).join('')}
+function normalizePhone(raw){let digits=String(raw||'').replace(/\D/g,'');if(!digits)return '';if(digits.length===10)return '91'+digits;if(digits.length===11&&digits.startsWith('0'))return '91'+digits.slice(1);if(digits.length===12&&digits.startsWith('91'))return digits;if(String(raw).trim().startsWith('+'))return digits;return digits}
+let bulkCandidates=[];
+function parseBulkLine(line){line=String(line||'').trim();if(!line)return null;let matches=line.match(/(?:\+?\d[\d\s().-]{7,}\d)/g);if(!matches||!matches.length)return null;let raw=matches[matches.length-1].trim();let phone=normalizePhone(raw);if(phone.length<10||phone.length>15)return null;let name=line.replace(raw,'').replace(/[,:;|\-]+/g,' ').trim();return {name:name||phone,phone}}
+function previewBulk(){let lines=document.getElementById('bulkText').value.split(/\r?\n/),seen=new Set(contacts.map(c=>normalizePhone(c.phone))),valid=[],dupes=0;for(let line of lines){let item=parseBulkLine(line);if(!item)continue;if(seen.has(item.phone)||valid.some(x=>x.phone===item.phone)){dupes++;continue}seen.add(item.phone);valid.push(item)}bulkCandidates=valid;let el=document.getElementById('bulkPreview');el.textContent=valid.length+' new numbers found; '+dupes+' duplicates skipped.';let btn=document.getElementById('bulkImportBtn');btn.classList.toggle('hidden',valid.length===0)}
+async function importBulk(){if(!bulkCandidates.length){alert('Check numbers first');return}let added=0;for(let item of bulkCandidates){let payload={owner_id:user.id,name:item.name||item.phone,phone:item.phone,shop_name:'',district:'',category:'',notes:''};let {data,error}=await sb.from('contacts').insert(payload).select().single();if(!error){contacts.unshift({id:data.id,name:data.name,phone:data.phone,shop:'',district:'',category:'',notes:''});added++}else console.error(error)}bulkCandidates=[];document.getElementById('bulkText').value='';document.getElementById('bulkPreview').textContent='';document.getElementById('bulkImportBtn').classList.add('hidden');updateDashboard();renderContacts();alert(added+' contacts imported.')}
+function importCSV(){let file=document.getElementById('csvfile').files[0];if(!file){alert('Choose CSV file');return}let reader=new FileReader();reader.onload=async function(){let lines=reader.result.split(/\r?\n/),added=0;for(let i=1;i<lines.length;i++){if(!lines[i].trim())continue;let a=lines[i].split(',');let n=(a[0]||'').trim().replace(/^"|"$/g,''),p=normalizePhone((a[1]||'').trim().replace(/^"|"$/g,''));if(!p||contacts.some(c=>normalizePhone(c.phone)===p))continue;if(!n)n=p;let payload={owner_id:user.id,name:n,phone:p,shop_name:a[2]||'',district:a[3]||'',category:a[4]||'',notes:a[5]||''};let {data,error}=await sb.from('contacts').insert(payload).select().single();if(!error){contacts.push({id:data.id,name:data.name,phone:data.phone,shop:data.shop_name||'',district:data.district||'',category:data.category||'',notes:data.notes||''});added++}}updateDashboard();renderContacts();alert(added+' contacts imported.')};reader.readAsText(file)}
+function exportCSV(){downloadCSV('contacts.csv',['name,phone,shop,district,category,notes',...contacts.map(c=>[c.name,c.phone,c.shop,c.district,c.category,c.notes].map(csvEscape).join(','))])}function exportHistory(){downloadCSV('sent-history.csv',['name,phone,campaign,status,date',...history.map(h=>[h.name,h.phone,h.campaign,h.status,h.date||''].map(csvEscape).join(','))])}function downloadCSV(name,lines){let blob=new Blob([lines.join('\n')],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)}function csvEscape(v){return '"'+String(v||'').replace(/"/g,'""')+'"'}function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+init();
+</script></body></html>
